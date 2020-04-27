@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./js/vue.js"></script>
+    <script src="./js/vue-router.js"></script>
+    <script src="./js/axios.js"></script>
+    <title>News</title>
+    <style>
+        body{
+            font-size: 14px;
+        }
+        .re{
+            margin-top:50px ;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h2>{{datas.title}}</h2>
+        <h3>{{datas.author}}</h3>
+        <span>{{datas.body}}</span>
+    </div>
+    <a class="re" href="/index.html">返回首页</a>
+</body>
+<script>
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg); //获取url中"?"符后的字符串并正则匹配
+        var context = "";
+        if (r != null)
+        context = r[2];
+        reg = null;
+        r = null;
+        return context == null || context == "" || context == "undefined" ? "" : context;
+        }
+        const app = new Vue({
+            el:'#app',
+            data(){
+                return{
+                    news:[],
+                    datas:[],
+                }
+            },
+            mounted(){
+                axios.get('http://139.196.225.118/api/v1/news').then(ret=>{
+                    this.news = ret.data.data
+                    
+                    for(var i=0;i<=this.news.length;i++){
+                        if(this.news[i]['id'] == GetQueryString("id")){
+                            this.datas=this.news[i]
+                        }
+                    }
+                   
+                })
+        }
+    })
+
+        // alert(new);
+</script>
+</html>
